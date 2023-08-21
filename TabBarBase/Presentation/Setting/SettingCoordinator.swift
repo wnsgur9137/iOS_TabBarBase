@@ -18,7 +18,7 @@ protocol SettingCoordinatorProtocol: Coordinator {
 final class SettingCoordinator: SettingCoordinatorProtocol {
     weak var finishDelegate: CoordinatorFinishDelegate?
     weak var navigationController: UINavigationController?
-    var childCoordinators: [Coordinator]
+    var childCoordinators: [Coordinator] = []
     var type: CoordinatorType { .setting }
     
     private let dependencies: SettingCoordinatorDependencies
@@ -31,7 +31,7 @@ final class SettingCoordinator: SettingCoordinatorProtocol {
     }
     
     func start() {
-        showSettingViewcontroller()
+        showSettingViewController()
     }
     
     func showSettingViewController() {

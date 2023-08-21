@@ -22,8 +22,8 @@ protocol SettingViewModelOutput {
 protocol SettingViewModel: SettingViewModelInput, SettingViewModelOutput { }
 
 final class DefaultSettingViewModel: SettingViewModel {
-    private func settingUseCase = SettingUseCase()
-    private func actions: SettingViewModelActions?
+    private let settingUseCase: SettingUseCase
+    private let actions: SettingViewModelActions?
     
     init(settingUseCase: SettingUseCase,
          actions: SettingViewModelActions? = nil) {

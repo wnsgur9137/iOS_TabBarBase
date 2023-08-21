@@ -19,7 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let tabBarController = UITabBarController()
         window?.rootViewController = tabBarController
-        appFlowCoordinator = appFlowCoordinator(tabBarController: tabBarController, appDIContainer: appDIContainer)
+        appFlowCoordinator = AppFlowCoordinator(tabBarController: tabBarController, appDIContainer: appDIContainer)
         appFlowCoordinator?.start()
         window?.makeKeyAndVisible()
         return

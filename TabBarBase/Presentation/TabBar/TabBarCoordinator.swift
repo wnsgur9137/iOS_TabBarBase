@@ -52,7 +52,6 @@ final class TabBarFlowCoordinator: TabBarFlowCoordinatorProtocol {
         tabBarController?.setViewControllers(controllers, animated: true)
         tabBarController?.selectedIndex = TabBarPage.home.pageOrderNumber()
         tabBarController?.tabBar.isTranslucent = false
-        tabBarController.tabBar.backgroundColor = .orange
     }
     
     private func getTabController(_ page: TabBarPage) -> UINavigationController {
@@ -64,6 +63,44 @@ final class TabBarFlowCoordinator: TabBarFlowCoordinatorProtocol {
         case .home:
             let homeCoordinator = HomeCoordinator(navigationController: navigationController, dependencies: self)
             homeCoordinator.finishDelegate = self
+            homeCoordinator.start()
+            childCoordinators.append(homeCoordinator)
+            
+        case .setting:
+            let settingCoordinator = SettingCoordinator(navigationController: navigationController, dependencies: self)
+            settingCoordinator.finishDelegate = self
+            settingCoordinator.start()
+            childCoordinators.append(settingCoordinator)
+        }
+        return navigationController
+    }
+}
+
+extension TabBarFlowCoordinator: HomeCoordinatorDependencies {
+    func makeHomeViewController(actions: HomeViewModelActions) -> HomeViewController {
+        self.homeTabDependencies.makeHomeViewController(actions: actions)
+    }
+}
+
+extension TabBarFlowCoordinator: SettingCoordinatorDependencies {
+    func makeSettingViewController(actions: SettingViewModelActions) -> SettingViewController {
+        self.settingTabDependencies.makeSettingViewController(actions: actions)
+    }
+}
+
+extension TabBarFlowCoordinator: CoordinatorFinishDelegate {
+    func coordinatorDidFinish(childCoordinator: Coordinator) {
+        childCoordinators = childCoordinators.filter({ $0.type != childCoordinator.type })
+        
+        switch childCoordinator.type {
+        case .home:
+            navigationController?.viewControllers.removeAll()
+            
+        case .setting:
+            navigationController?.viewControllers.removeAll()
+            
+        default:
+            break
         }
     }
 }

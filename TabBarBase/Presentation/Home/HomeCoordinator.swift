@@ -18,7 +18,7 @@ protocol HomeCoordinatorProtocol: Coordinator {
 final class HomeCoordinator: HomeCoordinatorProtocol {
     weak var finishDelegate: CoordinatorFinishDelegate?
     weak var navigationController: UINavigationController?
-    var childCoordinators: [Coordinator]
+    var childCoordinators: [Coordinator] = []
     var type: CoordinatorType { .home }
     
     private let dependencies: HomeCoordinatorDependencies
@@ -35,7 +35,7 @@ final class HomeCoordinator: HomeCoordinatorProtocol {
     }
     
     func showHomeViewController() {
-        let actions = HomeViewController()
+        let actions = HomeViewModelActions()
         let viewController = dependencies.makeHomeViewController(actions: actions)
         
         navigationController?.pushViewController(viewController, animated: false)
