@@ -21,14 +21,14 @@ final class MainSceneDIContainer {
     func makeTabBarFlowCoordinator(tabBarController: UITabBarController) -> TabBarFlowCoordinator {
         return TabBarFlowCoordinator(
             tabBarController: tabBarController,
-            homeTabDependencies: self,
-            settingTabDependencies: self
+            homeDependencies: self,
+            settingDependencies: self
         )
     }
 }
 
 // MARK: - HomeTab Coordiantor Dependencies
-extension MainSceneDIContainer: HomeTabCoordinatorDependencies {
+extension MainSceneDIContainer: HomeCoordinatorDependencies {
     func makeHomeRepository() -> HomeRepository {
         return DefaultHomeRepository(dataTransferService: dependencies.apiDataTransferService)
     }
@@ -51,7 +51,7 @@ extension MainSceneDIContainer: HomeTabCoordinatorDependencies {
 }
 
 // MARK: - SettingTab Coordinator Dependencies
-extension MainSceneDIContainer: SettingTabCoordinatorDependencies {
+extension MainSceneDIContainer: SettingCoordinatorDependencies {
     func makeSettingRepository() -> SettingRepository {
         return DefaultSettingRepository(dataTransferService: dependencies.apiDataTransferService)
     }

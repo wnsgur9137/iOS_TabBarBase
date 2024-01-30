@@ -7,14 +7,6 @@
 
 import UIKit
 
-protocol HomeTabCoordinatorDependencies {
-    func makeHomeViewController(actions: HomeViewModelActions) -> HomeViewController
-}
-
-protocol SettingTabCoordinatorDependencies {
-    func makeSettingViewController(actions: SettingViewModelActions) -> SettingViewController
-}
-
 protocol TabBarFlowCoordinatorProtocol: Coordinator {
     var tabBarController: UITabBarController? { get set }
 }
@@ -26,18 +18,18 @@ final class TabBarFlowCoordinator: TabBarFlowCoordinatorProtocol {
     var type: CoordinatorType { .tab }
     
     weak var tabBarController: UITabBarController?
-    private let homeTabDependencies: HomeTabCoordinatorDependencies
-    private let settingTabDependencies: SettingTabCoordinatorDependencies
+    private let homeDependencies: HomeCoordinatorDependencies
+    private let settingDependencies: SettingCoordinatorDependencies
     
     private weak var homeViewController: HomeViewController?
     private weak var settingViewController: SettingViewController?
     
     init(tabBarController: UITabBarController,
-         homeTabDependencies: HomeTabCoordinatorDependencies,
-         settingTabDependencies: SettingTabCoordinatorDependencies) {
+         homeDependencies: HomeCoordinatorDependencies,
+         settingDependencies: SettingCoordinatorDependencies) {
         self.tabBarController = tabBarController
-        self.homeTabDependencies = homeTabDependencies
-        self.settingTabDependencies = settingTabDependencies
+        self.homeDependencies = homeDependencies
+        self.settingDependencies = settingDependencies
     }
     
     func start() {
@@ -61,30 +53,18 @@ final class TabBarFlowCoordinator: TabBarFlowCoordinatorProtocol {
         
         switch page {
         case .home:
-            let homeCoordinator = HomeCoordinator(navigationController: navigationController, dependencies: self)
+            let homeCoordinator = HomeCoordinator(navigationController: navigationController, dependencies: homeDependencies)
             homeCoordinator.finishDelegate = self
             homeCoordinator.start()
             childCoordinators.append(homeCoordinator)
             
         case .setting:
-            let settingCoordinator = SettingCoordinator(navigationController: navigationController, dependencies: self)
+            let settingCoordinator = SettingCoordinator(navigationController: navigationController, dependencies: settingDependencies)
             settingCoordinator.finishDelegate = self
             settingCoordinator.start()
             childCoordinators.append(settingCoordinator)
         }
         return navigationController
-    }
-}
-
-extension TabBarFlowCoordinator: HomeCoordinatorDependencies {
-    func makeHomeViewController(actions: HomeViewModelActions) -> HomeViewController {
-        self.homeTabDependencies.makeHomeViewController(actions: actions)
-    }
-}
-
-extension TabBarFlowCoordinator: SettingCoordinatorDependencies {
-    func makeSettingViewController(actions: SettingViewModelActions) -> SettingViewController {
-        self.settingTabDependencies.makeSettingViewController(actions: actions)
     }
 }
 
